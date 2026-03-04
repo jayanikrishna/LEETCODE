@@ -1,4 +1,4 @@
-# Last updated: 3/4/2026, 8:13:27 PM
+# Last updated: 3/4/2026, 8:13:40 PM
 1class Solution:
 2    def isValid(self, s: str) -> bool:
 3        # Map each closing bracket to its opening counterpart
