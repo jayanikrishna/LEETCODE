@@ -1,30 +1,29 @@
-# Last updated: 2/19/2026, 5:58:05 PM
-1class Solution(object):
-2    def longestPalindrome(self, s):
-3        """
-4        :type s: str
-5        :rtype: str
-6        """
-7        res = ""
-8        resLen = 0
-9        
-10        for i in range(len(s)):
-11            # Odd length palindromes (e.g., "aba")
-12            l, r = i, i
-13            while l >= 0 and r < len(s) and s[l] == s[r]:
-14                if (r - l + 1) > resLen:
-15                    res = s[l:r+1]
-16                    resLen = r - l + 1
-17                l -= 1
-18                r += 1
-19                
-20            # Even length palindromes (e.g., "abba")
-21            l, r = i, i + 1
-22            while l >= 0 and r < len(s) and s[l] == s[r]:
-23                if (r - l + 1) > resLen:
-24                    res = s[l:r+1]
-25                    resLen = r - l + 1
-26                l -= 1
-27                r += 1
-28                
-29        return res
+# Last updated: 3/5/2026, 11:58:41 PM
+1class Solution:
+2    def longestPalindrome(self, s: str) -> str:
+3        if not s or len(s) < 1:
+4            return ""
+5        
+6        start, end = 0, 0
+7        
+8        def expandAroundCenter(left: int, right: int) -> int:
+9            while left >= 0 and right < len(s) and s[left] == s[right]:
+10                left -= 1
+11                right += 1
+12            # Return the length of the palindrome found
+13            return right - left - 1
+14
+15        for i in range(len(s)):
+16            # Case 1: Odd length (center is s[i])
+17            len1 = expandAroundCenter(i, i)
+18            # Case 2: Even length (center is between s[i] and s[i+1])
+19            len2 = expandAroundCenter(i, i + 1)
+20            
+21            max_len = max(len1, len2)
+22            
+23            # If we found a longer palindrome, update our start/end pointers
+24            if max_len > (end - start):
+25                start = i - (max_len - 1) // 2
+26                end = i + max_len // 2
+27                
+28        return s[start:end + 1]
