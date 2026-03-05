@@ -1,29 +1,26 @@
-# Last updated: 3/5/2026, 11:59:19 PM
+# Last updated: 3/6/2026, 12:03:38 AM
 1class Solution:
-2    def longestPalindrome(self, s: str) -> str:
-3        if not s or len(s) < 1:
-4            return ""
-5        
-6        start, end = 0, 0
-7        
-8        def expandAroundCenter(left: int, right: int) -> int:
-9            while left >= 0 and right < len(s) and s[left] == s[right]:
-10                left -= 1
-11                right += 1
-12            # Return the length of the palindrome found
-13            return right - left - 1
-14
-15        for i in range(len(s)):
-16            # Case 1: Odd length (center is s[i])
-17            len1 = expandAroundCenter(i, i)
-18            # Case 2: Even length (center is between s[i] and s[i+1])
-19            len2 = expandAroundCenter(i, i + 1)
-20            
-21            max_len = max(len1, len2)
-22            
-23            # If we found a longer palindrome, update our start/end pointers
-24            if max_len > (end - start):
-25                start = i - (max_len - 1) // 2
-26                end = i + max_len // 2
-27                
-28        return s[start:end + 1]
+2    def generateParenthesis(self, n: int) -> list[str]:
+3        res = []
+4        stack = []
+5
+6        def backtrack(open_count, close_count):
+7            # Base Case: We've used all n pairs
+8            if open_count == close_count == n:
+9                res.append("".join(stack))
+10                return
+11            
+12            # Choice 1: Add an opening parenthesis
+13            if open_count < n:
+14                stack.append("(")
+15                backtrack(open_count + 1, close_count)
+16                stack.pop() # Backtrack: remove it before the next choice
+17            
+18            # Choice 2: Add a closing parenthesis
+19            if close_count < open_count:
+20                stack.append(")")
+21                backtrack(open_count, close_count + 1)
+22                stack.pop() # Backtrack: remove it before the next choice
+23
+24        backtrack(0, 0)
+25        return res
