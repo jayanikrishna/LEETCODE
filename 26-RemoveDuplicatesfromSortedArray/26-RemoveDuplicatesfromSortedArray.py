@@ -1,30 +1,47 @@
-# Last updated: 3/7/2026, 11:53:33 PM
-1class Solution:
-2    def divide(self, dividend: int, divisor: int) -> int:
-3        # Step 1: Handle 32-bit overflow cases
-4        MAX = 2**31 - 1
-5        MIN = -2**31
-6        
-7        if dividend == MIN and divisor == -1:
-8            return MAX
-9        
-10        # Step 2: Determine sign
-11        negative = (dividend < 0) != (divisor < 0)
-12        a, b = abs(dividend), abs(divisor)
-13        res = 0
-14        
-15        # Step 3: Exponential subtraction
-16        while a >= b:
-17            temp_divisor, multiple = b, 1
-18            # Keep doubling the divisor while it's smaller than the remainder
-19            while a >= (temp_divisor << 1):
-20                temp_divisor <<= 1
-21                multiple <<= 1
-22            
-23            # Subtract the largest found multiple and update quotient
-24            a -= temp_divisor
-25            res += multiple
-26            
-27        # Step 4: Apply sign and clamp to 32-bit range
-28        res = -res if negative else res
-29        return max(MIN, min(MAX, res))
+# Last updated: 3/8/2026, 1:12:44 AM
+1from collections import Counter
+2
+3class Solution:
+4    def findSubstring(self, s: str, words: list[str]) -> list[int]:
+5        if not s or not words:
+6            return []
+7        
+8        word_len = len(words[0])
+9        word_count = len(words)
+10        total_len = word_len * word_count
+11        word_map = Counter(words)
+12        res = []
+13        
+14        # We only need to start from 0 to word_len - 1
+15        for i in range(word_len):
+16            left = i
+17            right = i
+18            curr_map = Counter()
+19            count = 0
+20            
+21            while right + word_len <= len(s):
+22                # Extract the next word block
+23                word = s[right:right + word_len]
+24                right += word_len
+25                
+26                if word in word_map:
+27                    curr_map[word] += 1
+28                    count += 1
+29                    
+30                    # If we have too many of one word, shift left pointer
+31                    while curr_map[word] > word_map[word]:
+32                        left_word = s[left:left + word_len]
+33                        curr_map[left_word] -= 1
+34                        count -= 1
+35                        left += word_len
+36                    
+37                    # If count matches total words, we found a permutation
+38                    if count == word_count:
+39                        res.append(left)
+40                else:
+41                    # Not a valid word, reset window
+42                    curr_map.clear()
+43                    count = 0
+44                    left = right
+45                    
+46        return res
