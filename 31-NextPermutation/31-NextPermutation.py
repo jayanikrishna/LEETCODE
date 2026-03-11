@@ -1,4 +1,4 @@
-# Last updated: 3/11/2026, 11:45:47 PM
+# Last updated: 3/11/2026, 11:46:02 PM
 1class Solution:
 2    def longestValidParentheses(self, s: str) -> int:
 3        max_len = 0
